@@ -49,13 +49,13 @@ select c.nombre_cliente, concat(e.nombre, ' ', e.apellido1, ' ',e.apellido2) as 
 8. Devuelve un listado con el nombre de los empleados junto con el nombre de sus jefes.
 
 ```
-
+select e.nombre as Nombre_empleado, j.nombre as Nombre_jefe from empleado e left join empleado j on e.codigo_jefe = j.codigo_empleado;
 ```
 
 9. Devuelve un listado que muestre el nombre de cada empleados, el nombre de su jefe y el nombre del jefe de sus jefe.
 
 ```
-
+select e.nombre as Nombre_empleado, j.nombre as Nombre_jefe, jj.nombre as Nombre_jefe_del_jefe  from empleado e left join empleado j on e.codigo_jefe = j.codigo_empleado left join empleado jj on jj.codigo_empleado = j.codigo_jefe;
 ```
 
 10. Devuelve el nombre de los clientes a los que no se les ha entregado a tiempo un pedido.
@@ -67,5 +67,5 @@ select c.nombre_cliente, concat(e.nombre, ' ', e.apellido1, ' ',e.apellido2) as 
 11. Devuelve un listado de las diferentes gamas de producto que ha comprado cada cliente.
 
 ```
-
+select c.nombre_cliente, g.gama from cliente c join pedido p on c.codigo_cliente = p.codigo_cliente join detalle_pedido d on p.codigo_pedido = d.codigo_pedido join producto pr on d.codigo_producto = pr.codigo_producto join gama_producto g on pr.gama = g.gama;
 ```
