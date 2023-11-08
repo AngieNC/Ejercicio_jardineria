@@ -61,11 +61,11 @@ select e.nombre as Nombre_empleado, j.nombre as Nombre_jefe, jj.nombre as Nombre
 10. Devuelve el nombre de los clientes a los que no se les ha entregado a tiempo un pedido.
 
 ```
-
+select p.fecha_esperada,p.fecha_entrega, c.nombre_cliente from cliente c join pedido p on c.codigo_cliente = p.codigo_cliente where p.fecha_entrega > p.fecha_esperada or p.fecha_entrega is null;
 ```
 
 11. Devuelve un listado de las diferentes gamas de producto que ha comprado cada cliente.
 
 ```
-select c.nombre_cliente, g.gama from cliente c join pedido p on c.codigo_cliente = p.codigo_cliente join detalle_pedido d on p.codigo_pedido = d.codigo_pedido join producto pr on d.codigo_producto = pr.codigo_producto join gama_producto g on pr.gama = g.gama;
+select distinct c.nombre_cliente, g.gama from cliente c join pedido p on c.codigo_cliente = p.codigo_cliente join detalle_pedido d on p.codigo_pedido = d.codigo_pedido join producto pr on d.codigo_producto = pr.codigo_producto join gama_producto g on pr.gama = g.gama;
 ```
