@@ -226,8 +226,127 @@ WHERE pa.codigo_cliente IS NULL;
 
 ```
 SELECT DISTINCT e.*, j.nombre as Nombre_jefe 
-FROM empleado e 
-LEFT JOIN cliente c ON e.codigo_empleado = c.codigo_empleado_rep_ventas 
-LEFT JOIN empleado j ON e.codigo_jefe = j.codigo_empleado 
-WHERE c.codigo_empleado_rep_ventas IS NULL;
+FROM empleado e liente from cliente where limite_credito = (SELECT max(limite_credito) from cliente);
++----------------+
 ```
+
+## 1.4.5 Consultas multitabla adicionales
+
+1. Devuelve un listado con el código de oficina y la ciudad donde hay oficinas.
+
+```
+SELECT codigo_oficina, ciudad 
+FROM oficina;
+```
+
+2. Devuelve un listado con la ciudad y el teléfono de las oficinas de España.
+
+```
+SELECT telefono , ciudad 
+FROM oficina
+WHERE pais='España';
+```
+
+3. Devuelve un listado con el nombre, apellidos y email de los empleados cuyo jefe tiene un código de jefe igual a 7.
+
+```
+SELECT DISTINCT CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) as Nombre_empleado, e.email
+FROM empleado e 
+JOIN empleado j ON e.codigo_jefe = j.codigo_jefe 
+WHERE j.codigo_jefe = 7;
+```
+
+4. Devuelve el nombre del puesto, nombre, apellidos y email del jefe de la empresa.
+
+```
+SELECT puesto, CONCAT(nombre,' ',apellido1,' ',apellido2) as Nombre_jefe, email 
+FROM empleado 
+WHERE codigo_jefe IS NULL;
+```
+
+5. Devuelve un listado con el nombre, apellidos y puesto de aquellos empleados que no sean representantes de ventas.
+
+```
+SELECT CONCAT(nombre, ' ', apellido1, ' ', apellido2) as Nombre_empleado, puesto 
+FROM empleado 
+WHERE puesto != 'Representante Ventas';
+```
+
+6. Devuelve un listado con el nombre de los todos los clientes españoles.
+
+```
+SELECT nombre_cliente 
+FROM cliente 
+WHERE cliente.pais = 'Spain';
+```
+
+7. Devuelve un listado con los distintos estados por los que puede pasar un pedido.
+
+```
+SELECT DISTINCT estado 
+FROM pedido;
+```
+
+8. Devuelve un listado con el código de cliente de aquellos clientes que realizaron algún pago en 2008. Tenga en cuenta que deberá eliminar aquellos códigos de cliente que aparezcan repetidos. Resuelva la consulta:
+• Utilizando la función YEAR de MySOL.
+• Utilizando la función DATE_FORMAT de MysQL.
+• Sin utilizar ninguna de las funciones anteriores.
+
+```
+SELECT codigo_cliente 
+FROM pago 
+WHERE YEAR(fecha_pago) = 2008;
+```
+
+9. Devuelve un listado con el código de pedido, código de cliente, fecha esperada y fecha de entrega de los pedidos que no han sido entregados a tiempo.
+
+```
+
+```
+
+10. Devuelve un listado con el código de pedido, código de cliente, fecha esperada y fecha de entrega de los pedidos cuya fecha de entrega ha sido al menos dos días antes de la fecha esperada.
+• Utilizando la función ADDOATE de MySOL.
+• Utilizando la función DATEDIFF de MysQL.
+• ¿Sería posible resolver esta consulta utilizando el operador de suma + o resta?
+
+```
+
+```
+
+11. Devuelve un listado de todos los pedidos que fueron rechazados en 2009.
+
+```
+
+```
+
+12. Devuelve un listado de todos los pedidos que han sido entregados en el mes de enero de cualquier año.
+
+```
+
+```
+
+13. Devuelve un listado con todos los pagos que se realizaron en el año 2083 mediante Paypal. Ordene el resultado de mayor a menor.
+
+```
+
+```
+
+14. Devuelve un listado con todas las formas de pago que aparecen en la tabla pago. Tenga en cuenta que no deben aparecer formas de pago repetidas.
+
+```
+
+```
+
+15. Devuelve un listado con todos los productos que pertenecen a la gama Omnamentales y que tienen más de 183 unidades en stock. El listado deberá estar ordenado por su precio de venta, mostrando en primer lugar los de mayor precio.
+
+```
+
+```
+
+16. Devuelve un listado con todos los clientes que sean de la ciudad de Madrid y cuyo representante de ventas tenga el
+código de empleado 11 o 30.
+
+```
+
+```
+
