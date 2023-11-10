@@ -368,3 +368,62 @@ FROM cliente
 WHERE ciudad = 'Madrid' AND codigo_empleado_rep_ventas = 11 OR codigo_empleado_rep_ventas = 30;
 ```
 
+### 1.4.8 Subconsultas
+
+#### 1.4.8.1 Con operadores básicos de comparación
+
+1. Devuelve el nombre del cliente con mayor límite de crédito.
+
+```
+SELECT nombre_cliente 
+FROM cliente where limite_credito = (SELECT max(limite_credito) FROM cliente);
+```
+
+2. Devuelve el nombre del producto que tenga el precio de venta más caro.
+
+```
+SELECT nombre 
+FROM producto  
+WHERE precio_venta = (SELECT MAX(precio_venta) FROM producto);
+```
+
+3. Devuelve el nombre del producto del que se han vendido más unidades. (Tenga en cuenta que tendrá que calcular cuál es el número total de unidades que se han vendido de cada producto a partir de los datos de la tabla `detalle_pedido`)
+
+```
+SELECT p.nombre
+FROM detalle_pedido de
+JOIN producto p ON de.codigo_producto = p.codigo_producto
+GROUP BY de.codigo_producto, p.nombre
+ORDER BY SUM(de.cantidad) DESC LIMIT 1;
+```
+
+4. Los clientes cuyo límite de crédito sea mayor que los pagos que haya realizado. (Sin utilizar `INNER JOIN`).
+
+```
+SELECT * FROM cliente
+where limite_credito > (SELECT sum(total) FROM pago where codigo_cliente = cliente.codigo_cliente);
+```
+
+5. Devuelve el producto que más unidades tiene en stock.
+
+```
+SELECT nombre 
+FROM producto 
+WHERE cantidad_en_stock = (SELECT MAX(cantidad_en_stock) FROM producto);
+```
+
+6. Devuelve el producto que menos unidades tiene en stock.
+
+```
+SELECT nombre 
+FROM producto 
+WHERE cantidad_en_stock = (SELECT min(cantidad_en_stock) FROM producto);
+```
+
+7. Devuelve el nombre, los apellidos y el email de los empleados que están a cargo de **Alberto Soria**.
+
+```
+SELECT CONCAT(nombre, ' ', apellido1, ' ', apellido2) AS Nombre_empleado, email 
+FROM empleado 
+WHERE codigo_jefe IN (SELECT distinct j.codigo_empleado FROM empleado e JOIN empleado j ON e.codigo_jefe = j.codigo_empleado WHERE j.nombre LIKE 'al%' );
+```
