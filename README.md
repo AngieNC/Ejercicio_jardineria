@@ -7,7 +7,7 @@ Resuelva todas las consultas utilizando la sintaxis de SQL1 y SQL2. Las consulta
 1. Obtén un listado con el nombre de cada cliente y el nombre y apellido de su representante de ventas.
 
 ```
-SELECT nombre_cliente, CONCAT(nombre, ' ', apellido1,  ' ',apellido2) as nombre  
+SELECT nombre_cliente, CONCAT(nombre, ' ', apellido1,  ' ',apellido2) AS nombre  
 FROM cliente 
 JOIN empleado ON cliente.codigo_empleado_rep_ventas = empleado.codigo_empleado;
 ```
@@ -15,7 +15,7 @@ JOIN empleado ON cliente.codigo_empleado_rep_ventas = empleado.codigo_empleado;
 2. Muestra el nombre de los clientes que hayan realizado pagos junto con el nombre de sus representantes de ventas.
 
 ```
-SELECT DISTINCT c.nombre_cliente as Cliente_que_pagó, CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) as Nombre_representante_de_ventas  
+SELECT DISTINCT c.nombre_cliente as Cliente_que_pagó, CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) AS Nombre_representante_de_ventas  
 FROM pago p 
 JOIN cliente c ON p.codigo_cliente = c.codigo_cliente 
 JOIN empleado e ON c.codigo_empleado_rep_ventas = e.codigo_empleado;
@@ -24,17 +24,17 @@ JOIN empleado e ON c.codigo_empleado_rep_ventas = e.codigo_empleado;
 3. Muestra el nombre de los clientes que no hayan realizado pagos junto con el nombre de sus representantes de ventas.
 
 ```
-SELECT c.nombre_cliente as Cliente_que_no_pago, CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) as Nombre_representante_de_ventas 
+SELECT c.nombre_cliente AS Cliente_que_no_pago, CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) AS Nombre_representante_de_ventas 
 FROM cliente c 
 LEFT JOIN pago p ON c.codigo_cliente = p.codigo_cliente 
 JOIN empleado e ON c.codigo_empleado_rep_ventas = e.codigo_empleado 
-WHERE p.codigo_cliente is null;
+WHERE p.codigo_cliente IS NULL;
 ```
 
 4. Devuelve el nombre de los clientes que han hecho pagos y el nombre de sus representantes junto con la ciudad de la oficina a la que pertenece el representante.
 
 ```
-SELECT DISTINCT c.nombre_cliente as Cliente_que_pagó, CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) as Nombre_representante_de_ventas, o.ciudad as Oficina 
+SELECT DISTINCT c.nombre_cliente AS Cliente_que_pagó, CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) AS Nombre_representante_de_ventas, o.ciudad as Oficina 
 FROM pago p 
 JOIN cliente c ON p.codigo_cliente = c.codigo_cliente 
 JOIN empleado e ON c.codigo_empleado_rep_ventas = e.codigo_empleado 
@@ -44,7 +44,7 @@ JOIN oficina o ON e.codigo_oficina = o.codigo_oficina;
 5. Devuelve el nombre de los clientes que no hayan hecho pagos y el nombre de sus representantes junto con la ciudad de la oficina a la que pertenece el representante.
 
 ```
-SELECT c.nombre_cliente as Cliente_que_no_pago, CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) as Nombre_representante_de_ventas, o.ciudad as Oficina 
+SELECT c.nombre_cliente AS Cliente_que_no_pago, CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) AS Nombre_representante_de_ventas, o.ciudad as Oficina 
 FROM cliente c 
 LEFT JOIN pago p ON c.codigo_cliente = p.codigo_cliente 
 JOIN empleado e ON c.codigo_empleado_rep_ventas = e.codigo_empleado 
@@ -55,7 +55,7 @@ WHERE p.codigo_cliente IS NULL;
 6. Lista la dirección de las oficinas que tengan clientes en Fuenlabrada.
 
 ```
-SELECT CONCAT(o.linea_direccion1, ' ', o.linea_direccion2)  as Direccion_oficina 
+SELECT CONCAT(o.linea_direccion1, ' ', o.linea_direccion2) AS Direccion_oficina 
 FROM oficina o 
 JOIN empleado e ON o.codigo_oficina = e.codigo_oficina 
 JOIN cliente c ON e.codigo_empleado = c.codigo_empleado_rep_ventas 
@@ -65,7 +65,7 @@ WHERE c.ciudad = 'Fuenlabrada';
 7. Devuelve el nombre de los clientes y el nombre de sus representantes junto con la ciudad de la oficina a la que pertenece el representante.
 
 ```
-SELECT c.nombre_cliente, CONCAT(e.nombre, ' ', e.apellido1, ' ',e.apellido2) as Nombre_de_representante, o.ciudad as Ciudad_representante 
+SELECT c.nombre_cliente, CONCAT(e.nombre, ' ', e.apellido1, ' ',e.apellido2) AS Nombre_de_representante, o.ciudad AS Ciudad_representante 
 FROM cliente c 
 JOIN empleado e ON c.codigo_empleado_rep_ventas = e.codigo_empleado 
 JOIN oficina o ON e.codigo_oficina = o.codigo_oficina;
@@ -74,7 +74,7 @@ JOIN oficina o ON e.codigo_oficina = o.codigo_oficina;
 8. Devuelve un listado con el nombre de los empleados junto con el nombre de sus jefes.
 
 ```
-SELECT e.nombre as Nombre_empleado, j.nombre as Nombre_jefe 
+SELECT e.nombre AS Nombre_empleado, j.nombre AS Nombre_jefe 
 FROM empleado e 
 LEFT JOIN empleado j ON e.codigo_jefe = j.codigo_empleado;
 ```
@@ -82,7 +82,7 @@ LEFT JOIN empleado j ON e.codigo_jefe = j.codigo_empleado;
 9. Devuelve un listado que muestre el nombre de cada empleados, el nombre de su jefe y el nombre del jefe de sus jefe.
 
 ```
-SELECT e.nombre as Nombre_empleado, j.nombre as Nombre_jefe, jj.nombre as Nombre_jefe_del_jefe  
+SELECT e.nombre AS Nombre_empleado, j.nombre AS Nombre_jefe, jj.nombre AS Nombre_jefe_del_jefe  
 FROM empleado e 
 LEFT JOIN empleado j ON e.codigo_jefe = j.codigo_empleado 
 LEFT JOIN empleado jj ON jj.codigo_empleado = j.codigo_jefe;
@@ -225,9 +225,11 @@ WHERE pa.codigo_cliente IS NULL;
 12. Devuelve un listado con los datos de los empleados que no tienen clientes asociados y el nombre de su jefe asociado.
 
 ```
-SELECT DISTINCT e.*, j.nombre as Nombre_jefe 
-FROM empleado e liente from cliente where limite_credito = (SELECT max(limite_credito) from cliente);
-+----------------+
+SELECT DISTINCT e.*, j.nombre AS Nombre_jefe 
+FROM empleado e 
+LEFT JOIN cliente c ON e.codigo_empleado = c.codigo_empleado_rep_ventas 
+LEFT JOIN empleado j ON e.codigo_jefe = j.codigo_empleado 
+WHERE c.codigo_empleado_rep_ventas IS NULL;
 ```
 
 ## 1.4.5 Consultas multitabla adicionales
@@ -250,7 +252,7 @@ WHERE pais='España';
 3. Devuelve un listado con el nombre, apellidos y email de los empleados cuyo jefe tiene un código de jefe igual a 7.
 
 ```
-SELECT DISTINCT CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) as Nombre_empleado, e.email
+SELECT DISTINCT CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) AS Nombre_empleado, e.email
 FROM empleado e 
 JOIN empleado j ON e.codigo_jefe = j.codigo_jefe 
 WHERE j.codigo_jefe = 7;
@@ -259,7 +261,7 @@ WHERE j.codigo_jefe = 7;
 4. Devuelve el nombre del puesto, nombre, apellidos y email del jefe de la empresa.
 
 ```
-SELECT puesto, CONCAT(nombre,' ',apellido1,' ',apellido2) as Nombre_jefe, email 
+SELECT puesto, CONCAT(nombre,' ',apellido1,' ',apellido2) AS Nombre_jefe, email 
 FROM empleado 
 WHERE codigo_jefe IS NULL;
 ```
@@ -267,7 +269,7 @@ WHERE codigo_jefe IS NULL;
 5. Devuelve un listado con el nombre, apellidos y puesto de aquellos empleados que no sean representantes de ventas.
 
 ```
-SELECT CONCAT(nombre, ' ', apellido1, ' ', apellido2) as Nombre_empleado, puesto 
+SELECT CONCAT(nombre, ' ', apellido1, ' ', apellido2) AS Nombre_empleado, puesto 
 FROM empleado 
 WHERE puesto != 'Representante Ventas';
 ```
@@ -301,51 +303,68 @@ WHERE YEAR(fecha_pago) = 2008;
 9. Devuelve un listado con el código de pedido, código de cliente, fecha esperada y fecha de entrega de los pedidos que no han sido entregados a tiempo.
 
 ```
-
+SELECT codigo_pedido , codigo_cliente, fecha_esperada, fecha_entrega 
+FROM pedido WHERE fecha_esperada < fecha_entrega;
 ```
 
 10. Devuelve un listado con el código de pedido, código de cliente, fecha esperada y fecha de entrega de los pedidos cuya fecha de entrega ha sido al menos dos días antes de la fecha esperada.
-• Utilizando la función ADDOATE de MySOL.
+• Utilizando la función ADDATE de MySOL.
 • Utilizando la función DATEDIFF de MysQL.
 • ¿Sería posible resolver esta consulta utilizando el operador de suma + o resta?
 
 ```
-
+SELECT codigo_pedido , codigo_cliente, fecha_esperada, fecha_entrega 
+FROM pedido 
+WHERE fecha_entrega <= ADDDATE(fecha_esperada, -2) ;
 ```
 
 11. Devuelve un listado de todos los pedidos que fueron rechazados en 2009.
 
 ```
-
+SELECT * 
+FROM pedido 
+WHERE estado='rechazado' AND YEAR(fecha_pedido)=2009;
 ```
 
 12. Devuelve un listado de todos los pedidos que han sido entregados en el mes de enero de cualquier año.
 
 ```
-
+SELECT * 
+FROM pedido 
+WHERE MONTH(fecha_entrega)=1;
 ```
 
-13. Devuelve un listado con todos los pagos que se realizaron en el año 2083 mediante Paypal. Ordene el resultado de mayor a menor.
+13. Devuelve un listado con todos los pagos que se realizaron en el año 2008 mediante Paypal. Ordene el resultado de mayor a menor.
 
 ```
-
+SELECT * 
+FROM pago  
+WHERE YEAR(fecha_pago) = 2008 AND forma_pago = 'Paypal' 
+ORDER BY fecha_pago DESC;
 ```
 
 14. Devuelve un listado con todas las formas de pago que aparecen en la tabla pago. Tenga en cuenta que no deben aparecer formas de pago repetidas.
 
 ```
-
+SELECT DISTINCT forma_pago 
+FRM pago;
 ```
 
-15. Devuelve un listado con todos los productos que pertenecen a la gama Omnamentales y que tienen más de 183 unidades en stock. El listado deberá estar ordenado por su precio de venta, mostrando en primer lugar los de mayor precio.
+15. Devuelve un listado con todos los productos que pertenecen a la gama Ornamentales y que tienen más de 100 unidades en stock. El listado deberá estar ordenado por su precio de venta, mostrando en primer lugar los de mayor precio.
 
 ```
-
+SELECT codigo_producto, nombre, precio_venta 
+FROM producto 
+WHERE gama = 'Ornamentales' AND cantidad_en_stock > 100 
+ORDER BY precio_venta DESC;
 ```
 
 16. Devuelve un listado con todos los clientes que sean de la ciudad de Madrid y cuyo representante de ventas tenga el
 código de empleado 11 o 30.
 
 ```
-
+SELECT nombre_cliente 
+FROM cliente 
+WHERE ciudad = 'Madrid' AND codigo_empleado_rep_ventas = 11 OR codigo_empleado_rep_ventas = 30;
 ```
+
