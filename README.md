@@ -513,3 +513,30 @@ SELECT *
 FROM cliente 
 WHERE codigo_cliente IN (SELECT codigo_cliente FROM pedido) AND codigo_cliente NOT IN(SELECT codigo_cliente FROM pago);
 ```
+
+#### 1.4.8.4 Subconsultas con EXISTS y NOT EXISTS
+
+1. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago.
+
+```
+
+```
+select * from cliente where codigo_cliente not exists(select codigo_cliente from pago);
+
+2. Devuelve un listado que muestre solamente los clientes que sí han realizado algún pago.
+
+```
+
+```
+
+3. Devuelve un listado de los productos que nunca han aparecido en un pedido.
+
+```
+
+```
+
+4. Devuelve un listado de los productos que han aparecido en un pedido alguna vez.
+
+```
+
+```
