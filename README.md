@@ -392,18 +392,16 @@ WHERE precio_venta = (SELECT MAX(precio_venta) FROM producto);
 3. Devuelve el nombre del producto del que se han vendido más unidades. (Tenga en cuenta que tendrá que calcular cuál es el número total de unidades que se han vendido de cada producto a partir de los datos de la tabla `detalle_pedido`)
 
 ```
-SELECT p.nombre
-FROM detalle_pedido de
-JOIN producto p ON de.codigo_producto = p.codigo_producto
-GROUP BY de.codigo_producto, p.nombre
-ORDER BY SUM(de.cantidad) DESC LIMIT 1;
+SELECT nombre 
+FROM producto 
+WHERE codigo_producto = (SELECT codigo_producto FROM detalle_pedido GROUP BY codigo_producto ORDER BY SUM(cantidad) DESC LIMIT 1);
 ```
 
 4. Los clientes cuyo límite de crédito sea mayor que los pagos que haya realizado. (Sin utilizar `INNER JOIN`).
 
 ```
 SELECT * FROM cliente
-WHERE limite_credito > (SELECT SUM(total) FROM pago where codigo_cliente = cliente.codigo_cliente);
+WHERE limite_credito > (SELECT SUM(total) FROM pago WHERE codigo_cliente = cliente.codigo_cliente);
 ```
 
 5. Devuelve el producto que más unidades tiene en stock.
@@ -487,23 +485,31 @@ WHERE codigo_cliente IN (SELECT codigo_cliente FROM pago);
 4. Devuelve un listado de los productos que nunca han aparecido en un pedido.
 
 ```
-select * from producto where codigo_producto not in (select codigo_producto from detalle_pedido);
+SELECT * 
+FROM producto 
+WHERE codigo_producto NOT IN (SELECT codigo_producto FROM detalle_pedido);
 ```
 
 5. Devuelve el nombre, apellidos, puesto y teléfono de la oficina de aquellos empleados que no sean representante de ventas de ningún cliente.
 
 ```
-
+SELECT e.nombre, e.apellido1, e.apellido2, o.telefono 
+FROM empleado e, oficina o 
+WHERE codigo_empleado NOT IN (SELECT codigo_empleado_rep_ventas FROM cliente) AND e.codigo_oficina = o.codigo_oficina;
 ```
 
 6. Devuelve las oficinas donde **no trabajan** ninguno de los empleados que hayan sido los representantes de ventas de algún cliente que haya realizado la compra de algún producto de la gama `Frutales`.
 
 ```
-
+SELECT *
+FROM oficina
+WHERE codigo_oficina NOT IN (SELECT codigo_oficina FROM empleado WHERE codigo_empleado IN (SELECT codigo_empleado_rep_ventas FROM cliente WHERE codigo_cliente IN (SELECT codigo_cliente FROM pedido WHERE codigo_pedido IN(SELECT codigo_pedido FROM detalle_pedido WHERE codigo_producto IN (SELECT codigo_producto FROM producto WHERE gama = 'Frutales')))));
 ```
 
 7. Devuelve un listado con los clientes que han realizado algún pedido pero no han realizado ningún pago.
 
 ```
-
+SELECT * 
+FROM cliente 
+WHERE codigo_cliente IN (SELECT codigo_cliente FROM pedido) AND codigo_cliente NOT IN(SELECT codigo_cliente FROM pago);
 ```
