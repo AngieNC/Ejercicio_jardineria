@@ -519,24 +519,31 @@ WHERE codigo_cliente IN (SELECT codigo_cliente FROM pedido) AND codigo_cliente N
 1. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago.
 
 ```
-
+SELECT * 
+FROM cliente 
+WHERE NOT EXISTS(SELECT codigo_cliente FROM pago WHERE pago.codigo_cliente = cliente.codigo_cliente);
 ```
-select * from cliente where codigo_cliente not exists(select codigo_cliente from pago);
 
 2. Devuelve un listado que muestre solamente los clientes que sí han realizado algún pago.
 
 ```
-
+SELECT * 
+FROM cliente 
+WHERE EXISTS(SELECT codigo_cliente FROM pago WHERE pago.codigo_cliente = cliente.codigo_cliente);
 ```
 
 3. Devuelve un listado de los productos que nunca han aparecido en un pedido.
 
 ```
-
+SELECT * 
+FROM producto 
+WHERE NOT EXISTS(SELECT codigo_producto FROM detalle_pedido WHERE detalle_pedido.codigo_producto = producto.codigo_producto);
 ```
 
 4. Devuelve un listado de los productos que han aparecido en un pedido alguna vez.
 
 ```
-
+SELECT * 
+FROM producto 
+WHERE EXISTS(SELECT codigo_producto FROM detalle_pedido WHERE detalle_pedido.codigo_producto = producto.codigo_producto);
 ```
