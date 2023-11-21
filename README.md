@@ -547,3 +547,290 @@ SELECT *
 FROM producto 
 WHERE EXISTS(SELECT codigo_producto FROM detalle_pedido WHERE detalle_pedido.codigo_producto = producto.codigo_producto);
 ```
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# TIPS SQL VIDEOS
+
+
+# TIPS GROUP BY
+
+1. Multiple grouping
+
+- List how many units each range has in stock.
+
+    ```
+    SELECT g.gama, p.precio_venta, COUNT(*) cantidad_en_stock 
+    FROM producto p
+    INNER JOIN gama_producto g ON g.gama = p.gama 
+    GROUP BY g.gama, p.precio_venta;
+    ```
+
+2. Filter by added features
+
+- Show the range and the units in stock greater than 100 of each of them.
+
+    ```
+    SELECT g.gama, COUNT(*) cantidad_en_stock 
+    FROM producto 
+    INNER JOIN gama_producto g ON g.gama = producto.gama 
+    GROUP BY g.gama 
+    HAVING COUNT(*) > 100;
+    ```
+
+- Show the range and the quantity in stock of the range that begins with the letter 'F', also the minimum quantity in stock must be greater than 10.
+
+    ```
+    SELECT g.gama, min(cantidad_en_stock) cantidad_en_stock 
+    FROM producto 
+    INNER JOIN gama_producto g ON g.gama = producto.gama 
+    WHERE SUBSTRING(g.gama, 1, 1) = 'F' 
+    GROUP BY g.gama 
+    HAVING MIN(cantidad_en_stock) > 10;
+    ```
+
+3. Grouped by scalar functions
+
+- Show the first letters of all the ranges there are and the units in stock of each of them.
+
+    ```
+    SELECT SUBSTRING(g.gama, 1,1) AS letraGama, COUNT(*) cantidad_en_stock 
+    FROM producto 
+    INNER JOIN gama_producto g ON g.gama = producto.gama 
+    GROUP BY SUBSTRING(g.gama, 1,1);
+    ```
+
+
+4. Grouped with UNION ALL
+
+- List the ranges and sales prices, in addition to showing the total number of ranges in products and the amount of price that is repeated.
+
+    ```
+    SELECT todo, COUNT(*) AS Total 
+    FROM (SELECT concat('Gama: ', g.gama) AS todo FROM producto INNER JOIN gama_producto g ON g.gama = producto.gama UNION ALL SELECT CONCAT('Precios de Ventas: ', CAST(producto.precio_venta as char)) AS todo FROM producto) AS Tabla 
+    GROUP BY todo;
+    ```
+
+
+5. Concatenate clustering results
+
+- List the types of ranges and the products that belong to it.
+
+    ```
+    SELECT g.gama, GROUP_CONCAT(producto.nombre ORDER BY producto.nombre DESC SEPARATOR '/ ') AS producto
+    FROM producto
+    INNER JOIN gama_producto g ON g.gama = producto.gama
+    GROUP BY g.gama;
+    ```
+
+6. Extra: Totals by grouping
+
+- List the range, sales price and total units of those fields.
+
+    ```
+    SELECT IFNULL(g.gama, 'TOTAL') AS gama, IFNULL(CAST(producto.precio_venta AS CHAR), 'TOTAL') AS precio, COUNT(*) AS total
+    FROM producto
+    INNER JOIN gama_producto g ON g.gama = producto.gama
+    GROUP BY g.gama, producto.precio_venta WITH ROLLUP;
+    ```
+
+--------------------------------------------------------------------------------------------------------------
+
+# TIPS WHERE
+
+1. NOT IN
+
+- List products where their id isn't 'AR-001' and 'FR-1'.
+
+    ```
+    SELECT codigo_producto 
+    FROM producto 
+    WHERE codigo_producto NOT IN('AR-001', 'FR-1');
+    ```
+
+2. Subquery
+
+- List the ranges that are in the product and that are greater than zero.
+
+    ```
+    SELECT * 
+    FROM gama_producto g 
+    WHERE (SELECT count(*) FROM producto  WHERE producto.gama = g.gama) > 0;
+    ```
+
+3. REGEX
+
+- Product's name where they contain a 'y' or a 'z'.
+
+    ```
+    SELECT * 
+    FROM producto 
+    WHERE nombre REGEXP "[y-z]";
+    ```
+    
+- Range's name where they start with H.
+
+    ```
+    SELECT * 
+    FROM producto 
+    WHERE gama REGEXP '^H';
+    ```
+
+- Product's name where they end with a.
+
+    ```
+    SELECT * 
+    FROM producto 
+    WHERE nombre REGEXP 'a$';
+    ```
+
+- Product's name where it contains a blank space.
+
+    ```
+    SELECT * 
+    FROM producto 
+    WHERE nombre REGEXP '([A-Za-z]+[\s][A-Za-z]+)';
+    ```
+
+4. IN and Subquery
+
+- Product's name where its range starts with A.
+
+    ```
+    SELECT * 
+    FROM producto 
+    WHERE gama IN(SELECT gama FROM gama_producto WHERE gama REGEXP '^A');
+    ```
+
+
+5. Functions
+
+- Product's name where its range begins with F.
+
+    ```
+    SELECT * 
+    FROM producto 
+    WHERE SUBSTRING(gama,1,1) = 'F';
+    ```
+---------------------------------------------------------------------------------------------------------------
+
+# TIPS UPDATE
+
+1. Edit using already saved value
+
+- Update the sale price by adding 10.00.
+
+    ```
+    UPDATE producto 
+    SET precio_venta = precio_venta +10.00;
+    ```
+
+2. Multiple grouping
+
+-  Update the sales price using a default value.
+
+    ```
+    UPDATE producto 
+    SET precio_venta = DEFAULT;
+    ```
+Note: It doesn't have a default value, but if it did it would give a result.
+
+3. Edit getting value by subquery
+
+- Update the product's description with the name of the range and the name of the respective product.
+
+    ```
+    UPDATE producto 
+    SET descripcion = (SELECT CONCAT(g.gama, ' ', producto.nombre) FROM gama_producto g WHERE g.gama = producto.gama);
+    ```
+
+4. Subqueries in WHERE
+
+- Update the word 'pato' where the first letter of the selected field starts with H.
+
+    ```
+    UPDATE producto 
+    SET prueba = 'pato' 
+    WHERE producto.prueba LIKE 'H%';
+    ```
+Note: The following query can be done, but this database fails in a constraint.
+    ```
+    UPDATE producto 
+    SET gama = 'pato' WHERE producto.gama IN(SELECT gama FROM gama_producto g WHERE g.gama LIKE 'H%');
+    ```
+
+5. UPDATE con JOIN
+
+- Update to transcribe product ranges by 'gama_producto' ranges.
+
+    ```
+    UPDATE producto
+    INNER JOIN gama_producto ON gama_producto.gama = producto.gama
+    SET producto.gama = gama_producto.gama;
+    ```
+
+---------------------------------------------------------------------------------------------------------------
+
+# TIPS SELECT
+
+1. Fixed values
+
+- Add a column and assign a value to it if it isn't in the original table.
+
+    ```
+    SELECT codigo_producto, nombre, gama, 1 AS ghost 
+    FROM producto;
+    ```
+
+2. Operations with columns
+
+-  Know the total of two columns that are related, but are different tables.
+
+    ```
+    SELECT DISTINCT d.precio_unidad, producto.precio_venta, (d.precio_unidad + producto.precio_venta) AS Suma FROM producto 
+    INNER JOIN detalle_pedido d ON d.codigo_producto = producto.codigo_producto;
+    ```
+
+-  Know the total of two columns that are related, but are from different tables and know the product's name with the quantity they have of it.
+
+    ```
+    SELECT DISTINCT d.precio_unidad, producto.precio_venta, (d.precio_unidad + producto.precio_venta) AS Suma, CONCAT(producto.nombre, ' - ', d.cantidad) AS Almacenado_producto_cantidad 
+    FROM producto 
+    INNER JOIN detalle_pedido d ON d.codigo_producto = producto.codigo_producto;
+    ```
+
+3. Conditions
+
+- List products and list in 'Retornar' when they are equal to 'Membrillero' a 1 appears, but if it's 'Higuera' a 2 and if it's not in the previous condition it returns a 3.
+
+    ```
+    SELECT nombre, CASE WHEN nombre = 'Membrillero' THEN 1 WHEN nombre = 'Higuera' THEN 2 ELSE 3 END AS Retornar 
+    FROM producto;
+    ```
+
+4. Subqueries
+
+- List the ranges and the total ranges there are for each product.
+
+    ```
+    SELECT gama, (SELECT COUNT(producto.gama) FROM producto WHERE producto.gama = gama_producto.gama) AS Total_gamas_productos 
+    FROM gama_producto;
+    ```
+
+5. Query on Subquery
+
+- List the ranges and the total number of ranges for each product, but greater than 4.
+
+    ```
+    SELECT gama, Total_gama 
+    FROM (SELECT g.gama, COUNT(g.gama) AS Total_gama FROM producto INNER JOIN gama_producto g ON g.gama = producto.gama GROUP BY g.gama) AS MiTabla 
+    WHERE MiTabla.Total_gama > 4;
+    ```
+
+6. Extra: Autoincremental virtual column
+
+- List an autoincremental id, the product code in relation to the autoincremental and list the product's name.
+
+    ```
+    SELECT ROW_NUMBER() OVER (ORDER BY (SELECT 1)) AS MiId, codigo_producto, nombre
+    FROM producto ORDER BY nombre;
+    ```
