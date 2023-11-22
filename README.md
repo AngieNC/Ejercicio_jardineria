@@ -1,10 +1,10 @@
-# Consultas jardineria
+# GARDENING QUERIES
 
-## 1.4.5 Consultas multitabla (Composición interna)
+## 1.4.5 Multi-table queries (Internal composition)
 
-Resuelva todas las consultas utilizando la sintaxis de SQL1 y SQL2. Las consultas con sintaxis de SQL2 se deben resolver con JOIN.
+Resolve all queries using SQL1 and SQL2 syntax. Queries with SQL2 syntax must be resolved with JOIN.
 
-1. Obtén un listado con el nombre de cada cliente y el nombre y apellido de su representante de ventas.
+1. Obtain a list with the name of each client and the first and last name of their sales representative.
 
 ```
 SELECT nombre_cliente, CONCAT(nombre, ' ', apellido1,  ' ',apellido2) AS nombre  
@@ -12,7 +12,7 @@ FROM cliente
 JOIN empleado ON cliente.codigo_empleado_rep_ventas = empleado.codigo_empleado;
 ```
 
-2. Muestra el nombre de los clientes que hayan realizado pagos junto con el nombre de sus representantes de ventas.
+2. Shows the name of customers who have made payments along with the name of their sales representatives.
 
 ```
 SELECT DISTINCT c.nombre_cliente as Cliente_que_pagó, CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) AS Nombre_representante_de_ventas  
@@ -21,7 +21,7 @@ JOIN cliente c ON p.codigo_cliente = c.codigo_cliente
 JOIN empleado e ON c.codigo_empleado_rep_ventas = e.codigo_empleado;
 ```
 
-3. Muestra el nombre de los clientes que no hayan realizado pagos junto con el nombre de sus representantes de ventas.
+3. Shows the name of customers who have not made payments along with the name of their sales representatives.
 
 ```
 SELECT c.nombre_cliente AS Cliente_que_no_pago, CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) AS Nombre_representante_de_ventas 
@@ -31,7 +31,7 @@ JOIN empleado e ON c.codigo_empleado_rep_ventas = e.codigo_empleado
 WHERE p.codigo_cliente IS NULL;
 ```
 
-4. Devuelve el nombre de los clientes que han hecho pagos y el nombre de sus representantes junto con la ciudad de la oficina a la que pertenece el representante.
+4. Returns the name of customers who have made payments and the name of their representatives along with the city of the office to which the representative belongs.
 
 ```
 SELECT DISTINCT c.nombre_cliente AS Cliente_que_pagó, CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) AS Nombre_representante_de_ventas, o.ciudad as Oficina 
@@ -41,7 +41,7 @@ JOIN empleado e ON c.codigo_empleado_rep_ventas = e.codigo_empleado
 JOIN oficina o ON e.codigo_oficina = o.codigo_oficina;
 ```
 
-5. Devuelve el nombre de los clientes que no hayan hecho pagos y el nombre de sus representantes junto con la ciudad de la oficina a la que pertenece el representante.
+5. Returns the name of customers who have not made payments and the name of their representatives along with the city of the office to which the representative belongs.
 
 ```
 SELECT c.nombre_cliente AS Cliente_que_no_pago, CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) AS Nombre_representante_de_ventas, o.ciudad as Oficina 
@@ -52,7 +52,7 @@ JOIN oficina o ON e.codigo_oficina = o.codigo_oficina
 WHERE p.codigo_cliente IS NULL;
 ```
 
-6. Lista la dirección de las oficinas que tengan clientes en Fuenlabrada.
+6. List the address of the offices that have clients in Fuenlabrada.
 
 ```
 SELECT CONCAT(o.linea_direccion1, ' ', o.linea_direccion2) AS Direccion_oficina 
@@ -62,7 +62,7 @@ JOIN cliente c ON e.codigo_empleado = c.codigo_empleado_rep_ventas
 WHERE c.ciudad = 'Fuenlabrada';
 ```
 
-7. Devuelve el nombre de los clientes y el nombre de sus representantes junto con la ciudad de la oficina a la que pertenece el representante.
+7. Returns the name of the clients and the name of their representatives along with the city of the office to which the representative belongs.
 
 ```
 SELECT c.nombre_cliente, CONCAT(e.nombre, ' ', e.apellido1, ' ',e.apellido2) AS Nombre_de_representante, o.ciudad AS Ciudad_representante 
@@ -71,7 +71,7 @@ JOIN empleado e ON c.codigo_empleado_rep_ventas = e.codigo_empleado
 JOIN oficina o ON e.codigo_oficina = o.codigo_oficina;
 ```
 
-8. Devuelve un listado con el nombre de los empleados junto con el nombre de sus jefes.
+8. Returns a list with the names of the employees along with the names of their bosses.
 
 ```
 SELECT e.nombre AS Nombre_empleado, j.nombre AS Nombre_jefe 
@@ -79,7 +79,7 @@ FROM empleado e
 LEFT JOIN empleado j ON e.codigo_jefe = j.codigo_empleado;
 ```
 
-9. Devuelve un listado que muestre el nombre de cada empleados, el nombre de su jefe y el nombre del jefe de sus jefe.
+9. Returns a list showing the name of each employee, the name of their boss, and the name of their boss's boss.
 
 ```
 SELECT e.nombre AS Nombre_empleado, j.nombre AS Nombre_jefe, jj.nombre AS Nombre_jefe_del_jefe  
@@ -88,7 +88,7 @@ LEFT JOIN empleado j ON e.codigo_jefe = j.codigo_empleado
 LEFT JOIN empleado jj ON jj.codigo_empleado = j.codigo_jefe;
 ```
 
-10. Devuelve el nombre de los clientes a los que no se les ha entregado a tiempo un pedido.
+10. Returns the name of customers to whom an order has not been delivered on time.
 
 ```
 SELECT p.fecha_esperada,p.fecha_entrega, c.nombre_cliente 
@@ -97,7 +97,7 @@ JOIN pedido p ON c.codigo_cliente = p.codigo_cliente
 WHERE p.fecha_entrega > p.fecha_esperada OR p.fecha_entrega IS NULL;
 ```
 
-11. Devuelve un listado de las diferentes gamas de producto que ha comprado cada cliente.
+11. Returns a list of the different product ranges that each customer has purchased.
 
 ```
 SELECT DISTINCT c.nombre_cliente, g.gama 
@@ -109,11 +109,11 @@ JOIN gama_producto g ON pr.gama = g.gama;
 ```
 
 
-## 1.4.5 Consultas multitabla (Composición externa)
+## 1.4.5 Multi-table queries (External Composition)
 
-Resuelva todas las consultas utilizando las cláusulas LEFT JOIN, RIGHT JOIN, NATURAL LEFT JOIN Y NATURAL RIGHT JOIN.
+Resolve all queries using the LEFT JOIN, RIGHT JOIN, NATURAL LEFT JOIN, and NATURAL RIGHT JOIN clauses.
 
-1. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago
+1. Returns a list that shows only the customers who have not made any payments.
 
 ```
 SELECT DISTINCT c.nombre_cliente 
@@ -122,7 +122,7 @@ LEFT JOIN pago p ON c.codigo_cliente = p.codigo_cliente
 WHERE p.codigo_cliente IS NULL;
 ```
 
-2. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pedido.
+2. Returns a list showing only customers who have not placed any orders.
 
 ```
 SELECT DISTINCT c.nombre_cliente 
@@ -131,7 +131,7 @@ LEFT JOIN pedido p ON c.codigo_cliente = p.codigo_cliente
 WHERE p.codigo_cliente IS NULL;
 ```
 
-3. Devuelve un listado que muestre los clientes que no han realizado ningún pago y los que no han realizado ningún pedido.
+3. Returns a list showing the customers who have not made any payments and those who have not placed any orders.
 
 ```
 SELECT DISTINCT c.nombre_cliente 
@@ -141,7 +141,7 @@ LEFT JOIN pedido pe ON c.codigo_cliente = pe.codigo_cliente
 WHERE p.codigo_cliente is null AND pe.codigo_cliente IS NULL;
 ```
 
-4. Devuelve un listado que muestre solamente los empleados que no tienen una oficina asociada.
+4. Returns a list showing only employees who do not have an associated office.
 
 ```
 SELECT o.codigo_oficina, e.nombre 
@@ -150,7 +150,7 @@ RIGHT JOIN oficina o ON e.codigo_oficina = o.codigo_oficina
 WHERE e.codigo_oficina IS NULL;
 ```
 
-5. Devuelve un listado que muestre solamente los empleados que no tienen un cliente asociado.
+5. Returns a list that shows only employees who do not have a client associated with them.
 
 ```
 SELECT DISTINCT nombre 
@@ -159,8 +159,7 @@ LEFT JOIN cliente ON empleado.codigo_empleado = cliente.codigo_empleado_rep_vent
 WHERE cliente.codigo_empleado_rep_ventas IS NULL;
 ```
 
-6. Devuelve un listado que muestre solamente los empleados que no tienen un cliente asociado junto con los datos de la
-oficina donde trabajan.
+6. Returns a list that shows only the employees who do not have an associated client along with the data of the office where they work.
 
 ```
 SELECT DISTINCT e.nombre, o.* 
@@ -170,7 +169,7 @@ LEFT JOIN oficina o ON e.codigo_oficina = o.codigo_oficina
 WHERE c.codigo_empleado_rep_ventas IS NULL;
 ```
 
-7. Devuelve un listado que muestre los empleados que no tienen una oficina asociada y los que no tienen un cliente asociado.
+7. Returns a list showing employees who do not have an associated office and those who do not have an associated client.
 
 ```
 SELECT o.codigo_oficina, e.nombre 
@@ -180,7 +179,7 @@ LEFT JOIN cliente ON e.codigo_empleado = cliente.codigo_empleado_rep_ventas
 WHERE e.codigo_oficina IS NULL OR cliente.codigo_empleado_rep_ventas IS NULL;
 ```
 
-8. Devuelve un listado de los productos que nunca han aparecido en un pedido.
+8. Returns a list of products that have never appeared in an order.
 
 ```
 SELECT pr.nombre 
@@ -189,7 +188,7 @@ LEFT JOIN detalle_pedido d ON pr.codigo_producto = d.codigo_producto
 WHERE d.codigo_producto IS NULL;
 ```
 
-9. Devuelve un listado de los productos que nunca han aparecido en un pedido. El resultado debe mostrar el nombre, la descripción y la imagen del producto.
+9. Returns a list of products that have never appeared in an order. The result should show the name, description and image of the product.
 
 ```
 SELECT pr.nombre, pr.descripcion, g.imagen 
@@ -199,7 +198,7 @@ LEFT JOIN gama_producto g ON pr.gama = g.gama
 WHERE d.codigo_producto IS NULL;
 ```
 
-10. Devuelve las oficinas donde no trabajan ninguno de los empleados que hayan sido los representantes de ventas de algún cliente que haya realizado la compra de algún producto de la gama Frutales.
+10. Returns the offices where none of the employees who have been the sales representatives of a client who has made the purchase of a product from the 'Frutales' range work.
 
 ```
 SELECT DISTINCT o.codigo_oficina
@@ -212,7 +211,7 @@ LEFT JOIN producto pr ON d.codigo_producto = pr.codigo_producto
 WHERE pr.gama = 'Frutales' AND c.codigo_empleado_rep_ventas IS NOT NULL AND e.codigo_empleado IS NOT NULL AND c.codigo_cliente IS NOT NULL AND p.codigo_pedido IS NOT NULL AND d.codigo_pedido IS NOT NULL AND pr.codigo_producto IS NOT NULL AND o.codigo_oficina IS NOT NULL; 
 ```
 
-11. Devuelve un listado con los clientes que han realizado algún pedido pero no han realizado ningún pago.
+11. Returns a list of customers who have placed an order but have not made any payment.
 
 ```
 SELECT DISTINCT c.nombre_cliente
@@ -222,7 +221,7 @@ LEFT JOIN pago pa ON c.codigo_cliente = pa.codigo_cliente
 WHERE pa.codigo_cliente IS NULL;
 ```
 
-12. Devuelve un listado con los datos de los empleados que no tienen clientes asociados y el nombre de su jefe asociado.
+12. Returns a list with the data of employees who do not have associated clients and the name of their associated boss.
 
 ```
 SELECT DISTINCT e.*, j.nombre AS Nombre_jefe 
@@ -232,16 +231,16 @@ LEFT JOIN empleado j ON e.codigo_jefe = j.codigo_empleado
 WHERE c.codigo_empleado_rep_ventas IS NULL;
 ```
 
-## 1.4.5 Consultas multitabla adicionales
+## 1.4.5 Additional multi-table queries
 
-1. Devuelve un listado con el código de oficina y la ciudad donde hay oficinas.
+1. Returns a list with office id and the city where there are offices
 
 ```
 SELECT codigo_oficina, ciudad 
 FROM oficina;
 ```
 
-2. Devuelve un listado con la ciudad y el teléfono de las oficinas de España.
+2. Returns a list with the city and phone number of the offices in Spain.
 
 ```
 SELECT telefono , ciudad 
@@ -249,7 +248,7 @@ FROM oficina
 WHERE pais='España';
 ```
 
-3. Devuelve un listado con el nombre, apellidos y email de los empleados cuyo jefe tiene un código de jefe igual a 7.
+3. Returns a list with the first name, last name and email of the employees whose boss has a boss id equal to 7.
 
 ```
 SELECT DISTINCT CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) AS Nombre_empleado, e.email
@@ -258,7 +257,7 @@ JOIN empleado j ON e.codigo_jefe = j.codigo_jefe
 WHERE j.codigo_jefe = 7;
 ```
 
-4. Devuelve el nombre del puesto, nombre, apellidos y email del jefe de la empresa.
+4. Returns the position, name, last name and email of the boss of the company.
 
 ```
 SELECT puesto, CONCAT(nombre,' ',apellido1,' ',apellido2) AS Nombre_jefe, email 
@@ -266,7 +265,7 @@ FROM empleado
 WHERE codigo_jefe IS NULL;
 ```
 
-5. Devuelve un listado con el nombre, apellidos y puesto de aquellos empleados que no sean representantes de ventas.
+5. Returns a list with the name, last name and position of those employees who are not sales representatives.
 
 ```
 SELECT CONCAT(nombre, ' ', apellido1, ' ', apellido2) AS Nombre_empleado, puesto 
@@ -274,7 +273,7 @@ FROM empleado
 WHERE puesto != 'Representante Ventas';
 ```
 
-6. Devuelve un listado con el nombre de los todos los clientes españoles.
+6. Returns a list with the name of all Spanish clients. 
 
 ```
 SELECT nombre_cliente 
@@ -282,17 +281,17 @@ FROM cliente
 WHERE cliente.pais = 'Spain';
 ```
 
-7. Devuelve un listado con los distintos estados por los que puede pasar un pedido.
+7. Returns a list with the different states through which an order can go.
 
 ```
 SELECT DISTINCT estado 
 FROM pedido;
 ```
 
-8. Devuelve un listado con el código de cliente de aquellos clientes que realizaron algún pago en 2008. Tenga en cuenta que deberá eliminar aquellos códigos de cliente que aparezcan repetidos. Resuelva la consulta:
-• Utilizando la función YEAR de MySOL.
-• Utilizando la función DATE_FORMAT de MysQL.
-• Sin utilizar ninguna de las funciones anteriores.
+8. Returns a list with the customer id of those customers who made a payment in 2008. Keep in mind that you must eliminate those customer codes that appear repeated. Solve the query:
+• Using the YEAR function of MySOL.
+• Using the MysQL DATE_FORMAT function.
+• Without using any of the previous functions.
 
 ```
 SELECT codigo_cliente 
@@ -300,7 +299,7 @@ FROM pago
 WHERE YEAR(fecha_pago) = 2008;
 ```
 
-9. Devuelve un listado con el código de pedido, código de cliente, fecha esperada y fecha de entrega de los pedidos que no han sido entregados a tiempo.
+9. Returns a list with the order code, customer code, expected date and delivery date of the orders that have not been delivered on time.
 
 ```
 SELECT codigo_pedido , codigo_cliente, fecha_esperada, fecha_entrega 
@@ -308,10 +307,10 @@ FROM pedido
 WHERE fecha_esperada < fecha_entrega;
 ```
 
-10. Devuelve un listado con el código de pedido, código de cliente, fecha esperada y fecha de entrega de los pedidos cuya fecha de entrega ha sido al menos dos días antes de la fecha esperada.
-• Utilizando la función ADDATE de MySOL.
-• Utilizando la función DATEDIFF de MysQL.
-• ¿Sería posible resolver esta consulta utilizando el operador de suma + o resta?
+10. Returns a list with the order code, customer code, expected date and delivery date of orders whose delivery date was at least two days before the expected date.
+• Using the ADDATE function of MySOL.
+• Using the MysQL DATEDIFF function.
+• Would it be possible to solve this query using the addition + or subtraction operator?
 
 ```
 SELECT codigo_pedido , codigo_cliente, fecha_esperada, fecha_entrega 
@@ -319,7 +318,7 @@ FROM pedido
 WHERE fecha_entrega <= ADDDATE(fecha_esperada, -2) ;
 ```
 
-11. Devuelve un listado de todos los pedidos que fueron rechazados en 2009.
+11. Returns a list of all orders that were rejected in 2009.
 
 ```
 SELECT * 
@@ -327,7 +326,7 @@ FROM pedido
 WHERE estado='rechazado' AND YEAR(fecha_pedido)=2009;
 ```
 
-12. Devuelve un listado de todos los pedidos que han sido entregados en el mes de enero de cualquier año.
+12. Returns a list of all orders that have been delivered in the month of January of any year.
 
 ```
 SELECT * 
@@ -335,7 +334,7 @@ FROM pedido
 WHERE MONTH(fecha_entrega)=1;
 ```
 
-13. Devuelve un listado con todos los pagos que se realizaron en el año 2008 mediante Paypal. Ordene el resultado de mayor a menor.
+13. Returns a list with all the payments that were made in 2008 through Paypal. Order the result from highest to lowest.
 
 ```
 SELECT * 
@@ -344,14 +343,14 @@ WHERE YEAR(fecha_pago) = 2008 AND forma_pago = 'Paypal'
 ORDER BY fecha_pago DESC;
 ```
 
-14. Devuelve un listado con todas las formas de pago que aparecen en la tabla pago. Tenga en cuenta que no deben aparecer formas de pago repetidas.
+14. Returns a list with all the payment methods that appear in the payment table. Please note that no duplicate payment methods should appear.
 
 ```
 SELECT DISTINCT forma_pago 
 FROM pago;
 ```
 
-15. Devuelve un listado con todos los productos que pertenecen a la gama Ornamentales y que tienen más de 100 unidades en stock. El listado deberá estar ordenado por su precio de venta, mostrando en primer lugar los de mayor precio.
+15. Returns a list with all the products that belong to the 'Ornamentales' range and that have more than 100 units in stock. The list must be ordered by their sales price, showing the highest prices first.
 
 ```
 SELECT codigo_producto, nombre, precio_venta 
@@ -360,8 +359,7 @@ WHERE gama = 'Ornamentales' AND cantidad_en_stock > 100
 ORDER BY precio_venta DESC;
 ```
 
-16. Devuelve un listado con todos los clientes que sean de la ciudad de Madrid y cuyo representante de ventas tenga el
-código de empleado 11 o 30.
+16. Returns a list with all the clients who are from the city of Madrid and whose sales representative has the employee id 11 or 30.
 
 ```
 SELECT nombre_cliente 
@@ -369,9 +367,9 @@ FROM cliente
 WHERE ciudad = 'Madrid' AND codigo_empleado_rep_ventas = 11 OR codigo_empleado_rep_ventas = 30;
 ```
 
-### 1.4.8 Subconsultas
+### 1.4.8 Subqueries
 
-#### 1.4.8.1 Con operadores básicos de comparación
+#### 1.4.8.1 With basic comparison operators
 
 1. Devuelve el nombre del cliente con mayor límite de crédito.
 
@@ -552,7 +550,7 @@ WHERE EXISTS(SELECT codigo_producto FROM detalle_pedido WHERE detalle_pedido.cod
 # TIPS SQL VIDEOS
 
 
-# TIPS GROUP BY
+# TIPS GROUP BY VIDEO
 
 1. Multiple grouping
 
@@ -635,7 +633,7 @@ WHERE EXISTS(SELECT codigo_producto FROM detalle_pedido WHERE detalle_pedido.cod
 
 --------------------------------------------------------------------------------------------------------------
 
-# TIPS WHERE
+# TIPS WHERE VIDEO
 
 1. NOT IN
 
@@ -713,7 +711,7 @@ WHERE EXISTS(SELECT codigo_producto FROM detalle_pedido WHERE detalle_pedido.cod
     ```
 ---------------------------------------------------------------------------------------------------------------
 
-# TIPS UPDATE
+# TIPS UPDATE VIDEO
 
 1. Edit using already saved value
 
@@ -770,7 +768,7 @@ Note: The following query can be done, but this database fails in a constraint.
 
 ---------------------------------------------------------------------------------------------------------------
 
-# TIPS SELECT
+# TIPS SELECT VIDEO
 
 1. Fixed values
 
